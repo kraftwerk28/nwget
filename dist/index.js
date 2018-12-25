@@ -5,37 +5,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("./lib/http"));
-http_1.default('http://api.plos.org/search?q=title:DNA')
-    .then((data) => {
-    console.log(data);
-});
-// yargs
-//   .usage('$0 <cmd> [args]')
-//   .command('hello [name]', 'welcome ter yargs!',
-//     (yargs: yargs.Argv): any => {
-//       yargs
-//       yargs.positional('name', {
-//         type: 'string',
-//         default: 'Cambi',
-//         describe: 'the name to say hello to'
-//       })
-//     }, function (argv: yargs.Arguments) {
-//       console.log('hello', argv.name, 'welcome to yargs!')
-//     })
-//   .help()
-//   .argv
-// const collectBody = async (res: IncomingMessage): Promise<string> =>
-//   new Promise<string>((resolve, reject) => {
-//     let body: string = '';
-//     res.on('data', chunk => { body += chunk });
-//     res.on('end', () => { resolve(body) });
-//     res.on('error', err => { reject(err) });
-//   })
-// get(
-//   'https://api.github.com/gists/e0e648a1c24c9f36c8fb876f53a8a4db',
-//   async res => {
-//     const result = await collectBody(res);
-//     console.log(result);
-//   }
-// );
+const ftp_1 = __importDefault(require("./lib/ftp"));
+const yargs_1 = __importDefault(require("yargs"));
+const argParser_1 = __importDefault(require("./lib/argParser"));
+const args = yargs_1.default
+    .alias('u', 'url')
+    .alias('p', 'pipe')
+    .alias('c', 'continuable')
+    .alias('o', 'out')
+    .alias('d', 'out-dir')
+    .alias('P', 'proxy')
+    .argv;
+console.log('Arguments: ');
+const options = argParser_1.default(args);
+if (options.protocol === 'ftp') {
+    ftp_1.default(options);
+}
+else {
+    http_1.default(options);
+}
 //# sourceMappingURL=index.js.map

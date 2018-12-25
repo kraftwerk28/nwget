@@ -7,8 +7,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dataExtractor = (response) => __awaiter(this, void 0, void 0, function* () {
+const http_1 = __importDefault(require("http"));
+const https_1 = __importDefault(require("https"));
+const responseCallback = (resolve, reject) => (res) => {
+    dataExtractor(res)
+        .then(d => resolve({ data: d }))
+        .catch(err => reject(err));
+};
+const defOptions = {};
+const dataExtractor = (response) => __awaiter(this, void 0, void 0, function* () {
     return new Promise((resolve, reject) => {
         const data = [];
         response.on('data', (chunk) => {
@@ -21,5 +32,11 @@ exports.dataExtractor = (response) => __awaiter(this, void 0, void 0, function* 
             reject(err);
         });
     });
+});
+exports.http = (url, opts) => new Promise((resolve, reject) => {
+    http_1.default.get(url, Object.assign({}, defOptions, opts), responseCallback(resolve, reject));
+});
+exports.https = (url, opts) => new Promise((resolve, reject) => {
+    https_1.default.get(url, Object.assign({}, defOptions, opts), responseCallback(resolve, reject));
 });
 //# sourceMappingURL=get.js.map
